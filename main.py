@@ -28,21 +28,33 @@ execute_query(connection, create_table_repeating_word)
 #                   "VALUES ('{}', '{}', 0, 0)".format(new_word_eng, new_word_pol)
 #     execute_query(connection, create_word)
 
-# select all repeating word
-select_repeating_words = "SELECT * from database_words"
-repeating_words = execute_read_query(connection, select_repeating_words)
+# reset value repeat_correct_session
+reset_value_repeat_correct_session = "UPDATE database_words SET repeat_correct_session=0"
+execute_query(connection, reset_value_repeat_correct_session)
 
 
-def repeat(rw):
-    for row in range(len(rw)):
-        print(rw[row][2])
-        user_answer = input()
-        if user_answer == rw[row][1]:
-            print(colored('GOOD', 'green'), '\n')
-        else:
-            print(colored('BAD', 'red'))
-            print(colored(rw[row][1].upper(), 'green'))
-            print(colored(user_answer.upper(), 'blue'), '\n')
+def select_words():
+    # select all repeating word
+    select_repeating_words = "SELECT * from database_words"
+    repeating_words = execute_read_query(connection, select_repeating_words)
+    return repeating_words
 
 
-repeat(repeating_words)
+rw = select_words()
+
+while rw:
+    rerun_words = "SELECT * FROM database_words WHERE repeat_correct_session=0"
+    rw = execute_read_query(connection, rerun_words)
+    if rerun_words:
+        for row in range(len(rw)):
+            print(rw[row][2])
+            user_answer = input()
+            if user_answer == rw[row][1]:
+                print(colored('GOOD', 'green'), '\n')
+                modify_repeat_correct_session = "UPDATE database_words SET repeat_correct_session=1 WHERE id={}".format(
+                    rw[row][0])
+                execute_query(connection, modify_repeat_correct_session)
+            else:
+                print(colored('BAD', 'red'))
+                print(colored(rw[row][1].upper(), 'green'))
+                print(colored(user_answer.upper(), 'blue'), '\n')
