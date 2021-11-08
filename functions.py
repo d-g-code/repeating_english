@@ -18,7 +18,6 @@ def execute_query(conn, query):
     try:
         cursor.execute(query)
         conn.commit()
-        print("Query executed successfully")
     except Error as error:
         print(f"The error '{error}'")
 
