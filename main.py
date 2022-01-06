@@ -34,8 +34,8 @@ execute_query(connection, reset_value_repeat_correct_session)
 
 
 def select_words():
-    # select all repeating word
-    select_repeating_words = "SELECT * from database_words"
+    # select all repeating word select by amount_repeat
+    select_repeating_words = 'SELECT * from database_words ORDER BY amount_repeat DESC'
     repeating_words = execute_read_query(connection, select_repeating_words)
     return repeating_words
 
