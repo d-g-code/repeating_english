@@ -55,6 +55,10 @@ while rw:
                     rw[row][0])
                 execute_query(connection, modify_repeat_correct_session)
             else:
+                modify_repeat_correct_session = "UPDATE database_words SET amount_repeat={} WHERE id={}".format(
+                    rw[row][3] + 1, rw[row][0])
+                execute_query(connection, modify_repeat_correct_session)
+                print(rw[row][3] + 1)
                 print(colored('BAD', 'red'))
-                print(colored(rw[row][1].upper(), 'green'))
-                print(colored(user_answer.upper(), 'blue'), '\n')
+                print(colored(rw[row][1], 'green'))
+                print(colored(user_answer, 'magenta'), '\n')
