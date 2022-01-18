@@ -18,20 +18,20 @@ connection = create_connection('database_words.db')
 execute_query(connection, create_table_repeating_word)
 
 # READ FILE WITH WORDS, AND SET DEFAULT VALUE
-# f = open('words', 'r')
-# lines = f.readlines()
-# for line in range(len(lines)):
-#     row = lines[line]
-#     cluster = row[0:-1].split()
-#     new_word_eng = cluster[0]
-#     new_word_pol = ' '.join(cluster[1:])
-#
-#     today = date.today()
-#     add_word_date = today.isoformat()[::-1]
-#     create_word = "INSERT INTO " \
-#                   "database_words (add_date, word_eng, word_pol, amount_repeat, repeat_correct_session) " \
-#                   "VALUES ('{}', '{}', '{}', 0, 0)".format(add_word_date, new_word_eng, new_word_pol)
-#     execute_query(connection, create_word)
+f = open('words', 'r')
+lines = f.readlines()
+for line in range(len(lines)):
+    row = lines[line]
+    cluster = row[0:-1].split()
+    new_word_eng = cluster[0]
+    new_word_pol = ' '.join(cluster[1:])
+
+    today = str(date.today())
+    add_word_date = today[8:] + '-' + today[5:7] + '-' + today[:4]
+    create_word = "INSERT INTO " \
+                  "database_words (add_date, word_eng, word_pol, amount_repeat, repeat_correct_session) " \
+                  "VALUES ('{}', '{}', '{}', 0, 0)".format(add_word_date, new_word_eng, new_word_pol)
+    execute_query(connection, create_word)
 
 # reset value repeat_correct_session
 reset_value_repeat_correct_session = "UPDATE database_words SET repeat_correct_session=0"

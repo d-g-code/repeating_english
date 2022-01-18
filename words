@@ -1,9 +1,10 @@
 pattern wzor
 statement oswiadczenie
 case przypadek
-sequence porządek
+sequence porzadek
 mapping odwzorowanie
 providing pod warunkiem że
 handy użyteczny
 figuring liczba
 rather raczej
+provide dostarczac, zaopatrzyc, zapewnic
