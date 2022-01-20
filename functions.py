@@ -55,7 +55,6 @@ def add_words_from_file(conn, file):
     # READ FILE WITH WORDS, ADD, AND SET DEFAULT VALUE
     f = open(file, 'r')
     lines = f.readlines()
-    print((len(lines)))
     for line in range(len(lines)):
         row = lines[line]
         cluster = row[0:-1].split()

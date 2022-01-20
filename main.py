@@ -2,6 +2,7 @@ from termcolor import colored
 from functions import create_connection, execute_query, execute_read_query, add_word, add_words_from_file
 import sys
 import argparse
+import io
 
 
 # Queries
@@ -18,6 +19,11 @@ CREATE TABLE IF NOT EXISTS database_words (
 connection = create_connection('database_words.db')
 execute_query(connection, create_table_repeating_word)
 
+# Convert data database_words.db to SQL dump file db_buckup.sql
+with io.open('db_buckup.sql', 'w') as db:
+    for line in connection.iterdump():
+        db.write('%s\n' % line)
+    print('Database saved as db_buckup.sql')
 
 # reset value repeat_correct_session
 reset_value_repeat_correct_session = "UPDATE database_words SET repeat_correct_session=0"
@@ -33,6 +39,7 @@ def select_words():
 
 rw = select_words()
 
+# Read file and save word to database
 file = 'words'
 add_words_from_file(connection, file)
 
@@ -43,7 +50,7 @@ def foo():
     if rerun_words:
         for row in range(len(rw)):
             print(rw[row][3])
-            user_answer = input()
+            user_answer = input('→ ')
             if user_answer == rw[row][2]:
                 print(colored('GOOD', 'green'), '\n')
                 modify_repeat_correct_session = "UPDATE database_words SET repeat_correct_session=1 WHERE id={}".format(
@@ -54,8 +61,8 @@ def foo():
                     rw[row][4] + 1, rw[row][0])
                 execute_query(connection, modify_repeat_correct_session)
                 print(colored('BAD', 'red'))
-                print(colored(rw[row][2], 'green'))
-                print(colored(user_answer, 'magenta'), '\n')
+                print(colored(rw[row][2], 'green'), '\n')
+                # print(colored(user_answer, 'magenta'))
 
 
 def roo():
