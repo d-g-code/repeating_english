@@ -40,12 +40,12 @@ def select_words():
 rw = select_words()
 
 # Read file and save word to database
-file = 'words'
-add_words_from_file(connection, file)
+# file = 'words'
+# add_words_from_file(connection, file)
 
 
-def foo():
-    rerun_words = "SELECT * FROM database_words WHERE repeat_correct_session=0 ORDER BY amount_repeat DESC"
+def repeat_words(words):
+    rerun_words = words
     rw = execute_read_query(connection, rerun_words)
     if rerun_words:
         for row in range(len(rw)):
@@ -65,25 +65,36 @@ def foo():
                 # print(colored(user_answer, 'magenta'))
 
 
-def roo():
+def add_word():
     print("słowo ang")
     ang = input()
     print("słowo pol")
     pol = input()
     record = ang + ' | ' + pol
     print(record,)
-    decison = input("Y / R / N: ")
-    if decison.lower() == 'y':
+    decision = input("Y / R / N: ")
+    if decision.lower() == 'y':
         print('OK, new word in database')
-    if decison.lower() == 'r':
-        roo()
-    if decison.lower() == 'n':
+    if decision.lower() == 'r':
+        add_word()
+    if decision.lower() == 'n':
         pass
 
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
-        foo()
+        # option choice way to repeat words !!!!!
+        choice = int(input("How do you want repeating words?\n1.New words\n2.The hardest words for you\n3.All words\n"))
+        if choice == 1:
+            choice_words = "SELECT * FROM database_words WHERE add_date='20-01-2022'"
+            repeat_words(choice_words)
+        if choice == 2:
+            choice_words = "SELECT * FROM database_words WHERE amount_repeat>=1"
+            repeat_words(choice_words)
+        if choice == 3:
+            choice_words = "SELECT * FROM database_words WHERE repeat_correct_session=0 ORDER BY amount_repeat DESC"
+            print("all")
+            repeat_words(choice_words)
     else:
         parser = argparse.ArgumentParser()
         parser.add_argument("add", type=str)
