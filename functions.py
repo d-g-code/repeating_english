@@ -67,3 +67,19 @@ def add_words_from_file(conn, file):
                       "database_words (add_date, word_eng, word_pol, amount_repeat, repeat_correct_session) " \
                       "VALUES ('{}', '{}', '{}', 0, 0)".format(add_word_date, new_word_eng, new_word_pol)
         # execute_query(conn, create_word)
+
+
+def add_word():
+    print("słowo ang")
+    ang = input()
+    print("słowo pol")
+    pol = input()
+    record = ang + ' | ' + pol
+    print(record,)
+    decision = input("Y / R / N: ")
+    if decision.lower() == 'y':
+        print('OK, new word in database')
+    if decision.lower() == 'r':
+        add_word()
+    if decision.lower() == 'n':
+        pass

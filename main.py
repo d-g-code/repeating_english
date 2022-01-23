@@ -1,8 +1,9 @@
 from termcolor import colored
-from functions import create_connection, execute_query, execute_read_query, add_word, add_words_from_file
+from functions import create_connection, execute_query, execute_read_query, add_word, add_words_from_file, add_word
 import sys
 import argparse
 import io
+from datetime import date
 
 
 # Queries
@@ -62,31 +63,19 @@ def repeat_words(words):
                 execute_query(connection, modify_repeat_correct_session)
                 print(colored('BAD', 'red'))
                 print(colored(rw[row][2], 'green'), '\n')
-                # print(colored(user_answer, 'magenta'))
-
-
-def add_word():
-    print("słowo ang")
-    ang = input()
-    print("słowo pol")
-    pol = input()
-    record = ang + ' | ' + pol
-    print(record,)
-    decision = input("Y / R / N: ")
-    if decision.lower() == 'y':
-        print('OK, new word in database')
-    if decision.lower() == 'r':
-        add_word()
-    if decision.lower() == 'n':
-        pass
 
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
-        # option choice way to repeat words !!!!!
-        choice = int(input("How do you want repeating words?\n1.New words\n2.The hardest words for you\n3.All words\n"))
+        # option choice way to repeat words
+        choice = int(input("How do you want repeating words?\n"
+                           "1.New words from today\n"
+                           "2.The hardest words for you\n"
+                           "3.All words\n"))
         if choice == 1:
-            choice_words = "SELECT * FROM database_words WHERE add_date='20-01-2022'"
+            today = str(date.today())
+            word_date = today[8:] + '-' + today[5:7] + '-' + today[:4]
+            choice_words = "SELECT * FROM database_words WHERE add_date='{}'".format(word_date)
             repeat_words(choice_words)
         if choice == 2:
             choice_words = "SELECT * FROM database_words WHERE amount_repeat>=1"
