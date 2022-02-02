@@ -1,5 +1,6 @@
 from termcolor import colored
-from functions import create_connection, execute_query, execute_read_query, add_word, add_words_from_file, add_word
+from functions import create_connection, execute_query, execute_read_query, add_word, add_words_from_file, add_word, \
+                        add_sentence_from_file
 import sys
 import argparse
 import io
@@ -19,6 +20,18 @@ CREATE TABLE IF NOT EXISTS database_words (
 """
 connection = create_connection('database_words.db')
 execute_query(connection, create_table_repeating_word)
+
+create_table_repeating_sentence = """
+CREATE TABLE IF NOT EXISTS database_sentence (
+    id_sentence INTEGER PRIMARY KEY,
+    sentence_eng TEXT NOT NULL,
+    sentence_pol TEXT NOT NULL,
+    id_word_eng INTEGER,
+    FOREIGN KEY(id_word_eng) REFERENCES database_words(id)
+);
+"""
+connection_sentence = create_connection('database_sentence.db')
+execute_query(connection_sentence, create_table_repeating_sentence)
 
 # Convert data database_words.db to SQL dump file db_buckup.sql
 with io.open('db_buckup.sql', 'w') as db:
@@ -40,10 +53,6 @@ def select_words():
 
 rw = select_words()
 
-# Read file and save word to database
-# file = 'words'
-# add_words_from_file(connection, file)
-
 
 def repeat_words(words):
     rerun_words = words
@@ -53,7 +62,7 @@ def repeat_words(words):
             print(rw[row][3])
             user_answer = input('→ ')
             if user_answer == rw[row][2]:
-                print(colored('GOOD', 'green'), '\n')
+                print()
                 modify_repeat_correct_session = "UPDATE database_words SET repeat_correct_session=1 WHERE id={}".format(
                     rw[row][0])
                 execute_query(connection, modify_repeat_correct_session)
@@ -61,8 +70,7 @@ def repeat_words(words):
                 modify_repeat_correct_session = "UPDATE database_words SET amount_repeat={} WHERE id={}".format(
                     rw[row][4] + 1, rw[row][0])
                 execute_query(connection, modify_repeat_correct_session)
-                print(colored('BAD', 'red'))
-                print(colored(rw[row][2], 'green'), '\n')
+                print(colored(rw[row][2], 'red'), '\n')
 
 
 if __name__ == "__main__":
@@ -90,5 +98,3 @@ if __name__ == "__main__":
         args = parser.parse_args()
         if args.add:
             add_word()
-
-
