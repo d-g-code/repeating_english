@@ -51,9 +51,10 @@ def add_word():
         pass
 
 
-# Function NEED correct
 def add_words_from_file(conn, file):
-    # READ FILE WITH WORDS, ADD, AND SET DEFAULT VALUE
+    """
+    Function reads the file checks new words with existing and adds the word if it is new
+    """
     f = open(file, 'r')
     lines = f.readlines()
     for line in range(len(lines)):
@@ -64,10 +65,17 @@ def add_words_from_file(conn, file):
 
         today = str(date.today())
         add_word_date = today[8:] + '-' + today[5:7] + '-' + today[:4]
-        create_word = "INSERT INTO " \
-                      "database_words (add_date, word_eng, word_pol, amount_repeat, repeat_correct_session) " \
-                      "VALUES ('{}', '{}', '{}', 0, 0)".format(add_word_date, new_word_eng, new_word_pol)
-        execute_query(conn, create_word)
+
+        ask_query = "select * from database_words where word_eng='{}';".format(new_word_eng)
+        ask = execute_read_query(conn, ask_query)
+        if not ask:
+            create_word = "INSERT INTO " \
+                          "database_words (add_date, word_eng, word_pol, amount_repeat, repeat_correct_session) " \
+                          "VALUES ('{}', '{}', '{}', 0, 0)".format(add_word_date, new_word_eng, new_word_pol)
+            execute_query(conn, create_word)
+            print("words added: ", create_word)
+        else:
+            print("This word is already in database: ", ask[0][2])
 
 
 def add_sentence_from_file(connection_words, connection_sentence, file):
