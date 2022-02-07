@@ -81,10 +81,10 @@ if __name__ == "__main__":
                            "2.The hardest words for you\n"
                            "3.All words\n"))
         if choice == 1:
-            today = str(date.today())
-            word_date = today[8:] + '-' + today[5:7] + '-' + today[:4]
-            choice_words = "SELECT * FROM database_words WHERE add_date='{}'".format(word_date)
-            repeat_words(choice_words)
+            choice_last_records = "SELECT * FROM database_words ORDER BY id DESC LIMIT 1"
+            last_record = execute_read_query(connection, choice_last_records)
+            query_all_recently_data_records = "SELECT * from database_words where add_date='{}'".format(last_record[0][1])
+            repeat_words(query_all_recently_data_records)
         if choice == 2:
             choice_words = "SELECT * FROM database_words WHERE amount_repeat>=1"
             repeat_words(choice_words)
